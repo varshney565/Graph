@@ -132,6 +132,10 @@ void preorder(vector<vector<pair<int,int>>> &adj,int u,vector<bool> &visited,str
 
 
 //Q6 : Heavhy path
+//top to down
+//for bottom up make a a faith that child will give the heavist path from child to destination
+//and for the current node return heaviest path through child(path from child to dest + that child weight to parent weight)
+//it will do the work
 void Helper(vector<vector<pair<int,int>>> &adj,int src,int dest,vector<bool>& visited,string path,int weight,string &PathAns,int &WeightAns){
     path += "|";
     path += to_string(src);
@@ -165,6 +169,45 @@ pair<int,string> HeavyPath(vector<vector<pair<int,int>>> &adj,int src,int dest){
 }
 
 
+//Q7 : Hamiltonian  Path
+
+void HamiltonPathsHeler(vector<vector<pair<int,int>>> &adj,int src,vector<bool> &visited,vector<string>& ans,int cnt,string path,int SOURCE){
+    cnt++;
+    path += "|";
+    path += to_string(src);
+    if(cnt == adj.size()){
+        //HamiltonPath found
+        ans.push_back(path);
+        //checking for cycle
+        bool ok = false;
+        for(int i = 0 ; i < adj[SOURCE].size() ; i++){
+            pair<int,int> Edge = adj[SOURCE][i];
+            if(Edge.first == src){
+                ok = true;
+                break;
+            }
+        }
+        if(ok){
+            ans.back() += "*";
+        }
+        return;
+    }
+    visited[src] = true;
+    for(int i = 0 ; i < adj[src].size() ; i++){
+        if(!visited[adj[src][i].first]){
+            HamiltonPathsHeler(adj,adj[src][i].first,visited,ans,cnt,path,SOURCE);
+        }
+    }
+    visited[src] = false;
+}
+
+vector<string> HamiltonPaths(vector<vector<pair<int,int>>> &adj,int src){
+    vector<bool> visited(adj.size(),false);
+    vector<string> ans;
+    HamiltonPathsHeler(adj,src,visited,ans,0,"",src);
+    return ans;
+}
+
 int main(){
     int V = 9;
     vector<vector<pair<int,int>>> adj(V);
@@ -181,6 +224,12 @@ int main(){
     addEdge(adj,4,6,8); 
     cout<<"Graph : \n";
     display(adj,V);
+
+    cout<<"HamiltonPaths are : \n";
+    vector<string> a = HamiltonPaths(adj,7);
+    for(int i = 0 ; i < a.size() ; i++){
+        cout<<a[i]<<"\n";
+    }
 
     cout<<"Finding The Path\n";
     cout<<hasPath(adj,0,6)<<"\n";
@@ -211,19 +260,22 @@ int main(){
 
 /**
 Graph : 
-0 --> (1,10) (3,10)
+0 --> (1,10) (3,10) 
 1 --> (0,10) (2,10)
 2 --> (1,10) (3,40) (7,2) (8,4)
 3 --> (0,10) (2,40) (4,2) 
 4 --> (3,2) (5,2) (6,8)
 5 --> (4,2) (6,3)
-6 --> (5,3) (4,8)
-7 --> (2,2) (8,3)
-8 --> (2,4) (7,3)
+6 --> (5,3) (4,8) 
+7 --> (2,2) (8,3) 
+8 --> (2,4) (7,3) 
+HamiltonPaths are :
+|7|8|2|1|0|3|4|5|6
+|7|8|2|1|0|3|4|6|5
 Finding The Path
 4
 0
-Heaviest Path from o to 6 is :
+Heaviest Path from o to 6 is : 
 70 |0|1|2|3|4|6
 preorder :
 0-->|0 @ 0
@@ -254,24 +306,24 @@ preorder :
 Removing Edge
 Graph after Removing the Edge
 0 --> (3,10)
-1 --> (2,10)
-2 --> (1,10) (3,40) (7,2) (8,4) 
-3 --> (0,10) (2,40) (4,2)
-4 --> (3,2) (5,2) (6,8)
+1 --> (2,10) 
+2 --> (1,10) (3,40) (7,2) (8,4)
+3 --> (0,10) (2,40) (4,2) 
+4 --> (3,2) (5,2) (6,8) 
 5 --> (4,2) (6,3)
 6 --> (5,3) (4,8)
 7 --> (2,2) (8,3) 
 8 --> (2,4) (7,3)
 RemovingVertex 2
 vertexRemoved
-Now the graph is :
+Now the graph is : 
 0 --> (3,10)
 1 -->
 2 -->
 3 --> (0,10) (4,2)
 4 --> (3,2) (5,2) (6,8) 
 5 --> (4,2) (6,3)
-6 --> (5,3) (4,8)
+6 --> (5,3) (4,8) 
 7 --> (8,3)
 8 --> (7,3) 
 */
