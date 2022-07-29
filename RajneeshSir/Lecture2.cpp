@@ -158,7 +158,48 @@ int islandPerimeter(vector<vector<int>>& grid) {
 }
 
 //Q5 : Leetcode 130
-
+void solve(vector<vector<char>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<vector<int>> dir = {{-1,0},{0,-1},{1,0},{0,1}};
+    
+    //DFS call
+    function<void(int,int)> dfs = [&](int x,int y){
+        //mark
+        grid[x][y] = 'T';
+        //visit all unvisited neighbours who has 'O' at its place.
+        for(int i = 0 ; i < 4 ; i++){
+            int newX = x+dir[i][0];
+            int newY = y+dir[i][1];
+            if(newX >=0 && newX < n && newY >= 0 && newY < m && grid[newX][newY] == 'O'){
+                dfs(newX,newY);
+            }
+        }
+    };
+    
+    //dfs call on boundries with 'O'
+    for(int i = 0 ; i < n ; i++){
+        if(grid[i][0] == 'O') dfs(i,0);
+        if(grid[i][m-1] == 'O') dfs(i,m-1);
+    }
+    
+    for(int j = 0 ; j < m ; j++){
+        if(grid[0][j] == 'O') dfs(0,j);
+        if(grid[n-1][j] == 'O') dfs(n-1,j);
+    }
+    
+    
+    //Final Ans Call
+    for(int i = 0 ; i < n ; i++){
+        for(int j = 0 ; j < m ; j++){
+            if(grid[i][j] == 'O'){
+                grid[i][j] = 'X';
+            }else if(grid[i][j] == 'T'){
+                grid[i][j] = 'O';
+            }
+        }
+    }
+}
 int main(){
     int V = 9;
     vector<vector<pair<int,int>>> adj(V);
