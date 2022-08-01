@@ -200,6 +200,7 @@ void solve(vector<vector<char>>& grid) {
         }
     }
 }
+
 int main(){
     int V = 9;
     vector<vector<pair<int,int>>> adj(V);
