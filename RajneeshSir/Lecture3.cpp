@@ -88,6 +88,12 @@ void BFS(vector<vector<int>> &Graph,int src){
                 }
             }else{
                 //cycle is there
+                /**
+                 * we are passing vertices in the queue only when they are not visited and since we found
+                 * the vertex which is at the top of the queue to be visited that means that there are already
+                 * a path from source to that vertex,and we are reaching it again from differnt path,
+                 * so that's why cycle is there.
+                 * */
             }
         }
         cout<<"\n";
@@ -124,6 +130,48 @@ void BFS_without_cycle(vector<vector<int>> &Graph,int src){
         cout<<"\n";
         level++;
     }
+}
+
+//Bipartite Graph
+//SetA    SetB
+//Bipartite means dividing the Graph in Two Sets such that there is no edge within elements of same set
+
+
+//
+//Note : if there is no cycle in graph : Graph is Bipartite
+
+//NOTE : if cycle is there
+//Odd Length Cycle in The Graph  ---> Graph is not Bipartite
+//Even Length Cycle in The Graph ---> Graph is Bipartite
+
+
+bool isBipartite(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> visited(n,0);
+    queue<int> PendingNodes;
+    int Colour = 1;
+        for(int i = 0 ; i < n ; i++){
+        if(!visited[i])
+            PendingNodes.push(i);
+        while(!PendingNodes.empty()){
+            int size = PendingNodes.size();
+            while(size-->0){
+                int Front = PendingNodes.front();
+                PendingNodes.pop();
+                if(visited[Front]){
+                    if(visited[Front] != Colour) return false;
+                    continue;
+                }
+                visited[Front] = Colour;
+                for(int i = 0 ; i < graph[Front].size() ; i++){
+                    if(!visited[graph[Front][i]])
+                        PendingNodes.push(graph[Front][i]);
+                }
+            }
+            Colour = 3 - Colour;
+        }
+    }
+    return true;
 }
 
 int main(){
