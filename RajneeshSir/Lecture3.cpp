@@ -174,6 +174,93 @@ bool isBipartite(vector<vector<int>>& graph) {
     return true;
 }
 
+//Leetcode 994
+int orangesRotting(vector<vector<int>>& grid) {
+    queue<pair<int,int>> RottingOranges;
+    int n = grid.size();
+    int m = grid[0].size();
+    for(int i = 0 ; i < n ; i++)
+        for(int j = 0 ; j < m ; j++)
+            if(grid[i][j] == 2)
+                RottingOranges.push({i,j});
+    int time = -1;
+    if(RottingOranges.size() == 0) time++;
+    int dir[4][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+    while(!RottingOranges.empty()){
+        int size = RottingOranges.size();
+        time++;
+        while(size-->0){
+            pair<int,int> FrontOrange = RottingOranges.front();
+            RottingOranges.pop();
+            for(int i = 0 ; i < 4 ; i++){
+                int newX = FrontOrange.first+dir[i][0];
+                int newY = FrontOrange.second+dir[i][1];
+                if(newX >= 0 && newX < n && newY >= 0 && newY < m && grid[newX][newY] == 1){
+                    RottingOranges.push({newX,newY});
+                    grid[newX][newY] = 2;
+                }
+            }
+        }
+    }
+    for(int i = 0 ; i < n ; i++)
+        for(int j = 0 ; j < m ; j++)
+            if(grid[i][j] == 1) return -1;
+    return time;
+}
+
+//Leetcode : 1020. Number of Enclaves
+int numEnclaves(vector<vector<int>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    int dir[4][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+    auto validate = [&](int x,int y){
+        return (x >= 0 && x < n && y >= 0 && y < m);
+    };
+    
+    queue<pair<int,int>> Cells;
+    for(int i = 0 ; i < n ; i++){
+        if(grid[i][0] == 1){
+            Cells.push({i,0});
+            grid[i][0] = -1;
+        }
+        if(grid[i][m-1] == 1){
+            Cells.push({i,m-1});
+            grid[i][m-1] = -1;
+        }
+    }
+    for(int j = 1 ; j < m - 1 ; j++){
+        if(grid[0][j] == 1){
+            Cells.push({0,j});
+            grid[0][j] = -1;
+        }
+        if(grid[n-1][j] == 1){
+            Cells.push({n-1,j});
+            grid[n-1][j] = -1;
+        }
+    }
+    while(!Cells.empty()){
+        int size = Cells.size();
+        while(size-->0){
+            pair<int,int> Front = Cells.front();
+            Cells.pop();
+            for(int i = 0 ; i < 4 ; i++){
+                int newX = Front.first+dir[i][0];
+                int newY = Front.second+dir[i][1];
+                if(validate(newX,newY) && grid[newX][newY] == 1){
+                    Cells.push({newX,newY});
+                    grid[newX][newY] = -1;
+                }
+            }
+        }
+    }
+    int ans = 0;
+    for(int i = 0 ; i < n ; i++)
+        for(int j = 0 ; j < m ; j++)
+            if(grid[i][j] == 1)
+                ans++;
+    return ans;
+}
+
 int main(){
     int V = 9;
     vector<vector<pair<int,int>>> adj(V);
