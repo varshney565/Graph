@@ -150,7 +150,7 @@ bool isBipartite(vector<vector<int>>& graph) {
     vector<int> visited(n,0);
     queue<int> PendingNodes;
     int Colour = 1;
-        for(int i = 0 ; i < n ; i++){
+    for(int i = 0 ; i < n ; i++){
         if(!visited[i])
             PendingNodes.push(i);
         while(!PendingNodes.empty()){
@@ -261,6 +261,119 @@ int numEnclaves(vector<vector<int>>& grid) {
     return ans;
 }
 
+//Leetcode 886
+bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+    vector<vector<int>> Graph(n);
+    for(int i = 0 ; i < dislikes.size() ; i++){
+        int u = dislikes[i][0];
+        int v = dislikes[i][1];
+        u--;
+        v--;
+        Graph[u].push_back(v);
+        Graph[v].push_back(u);
+    }
+    vector<int> visited(n,0);
+    for(int i = 0 ; i < n ; i++){
+        if(!visited[i]){
+            queue<int> PendingNodes;
+            PendingNodes.push(i);
+            int colour = 1;
+            while(!PendingNodes.empty()){
+                int size = PendingNodes.size();
+                while(size-->0){
+                    int v = PendingNodes.front();
+                    PendingNodes.pop();
+                    if(visited[v]){
+                        //cycle
+                        if(visited[v] != colour)
+                            return false;
+                        continue;
+                    }
+                    visited[v] = colour;
+                    for(int i = 0 ; i < Graph[v].size() ; i++){
+                        if(!visited[Graph[v][i]]){
+                            PendingNodes.push(Graph[v][i]);
+                        }
+                    }
+                }
+                colour = 3-colour;
+            }
+        }
+    }
+    return true;
+}
+
+//Leetcode 1091
+int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+    int dir[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,-1},{-1,1},{1,-1}};
+    queue<pair<int,int>> PendingNodes;
+    int n = grid.size();
+    int m = grid[0].size();
+    if(grid[0][0] == 1 || grid[n-1][m-1] == 1) return -1;
+    PendingNodes.push({0,0});
+    int level = 1;
+    while(!PendingNodes.empty()){
+        int size = PendingNodes.size();
+        while(size-->0){
+            pair<int,int> v = PendingNodes.front();
+            PendingNodes.pop();
+            if(grid[v.first][v.second] == 1){
+                continue;
+            }
+            if(v.first == n-1 && v.second == m-1) return level;
+            grid[v.first][v.second] = 1;
+            for(int i = 0 ; i < 8 ; i++){
+                int newX = v.first+dir[i][0];
+                int newY = v.second+dir[i][1];
+                if(newX >= 0 && newX < n && newY >= 0 && newY < m && grid[newX][newY] == 0){
+                    PendingNodes.push({newX,newY});
+                }
+            }
+        }
+        level++;
+    }
+    return -1;
+}
+
+//Leetcode 542 : 01 Matrix
+ vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+    int n = mat.size();
+    int m = mat[0].size();
+    queue<int> PendingNodes;
+    for(int i = 0 ; i < n ; i++){
+        for(int j = 0 ; j < m ; j++){
+            if(mat[i][j] == 0){
+                PendingNodes.push(i*m+j);
+            }
+        }
+    }
+    
+    vector<vector<int>> ans(n,vector<int>(m,0));
+    int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+    int level = 0;
+    while(!PendingNodes.empty()){
+        int size = PendingNodes.size();
+        while(size-->0){
+            int Front = PendingNodes.front();
+            PendingNodes.pop();
+            int r = Front/m;
+            int c = Front%m;
+            for(int i = 0 ; i < 4 ; i++){
+                int newX = r+dir[i][0];
+                int newY = c+dir[i][1];
+                if(newX >= 0 && newX < n && newY >= 0 && newY < m && mat[newX][newY] == 1){
+                    mat[newX][newY] = 0;
+                    PendingNodes.push(newX*m+newY);
+                    ans[newX][newY] = level+1;
+                }
+            }
+        }
+        level++;
+    }
+    return ans;
+}
+
+
 int main(){
     int V = 9;
     vector<vector<pair<int,int>>> adj(V);
@@ -277,12 +390,3 @@ int main(){
     addEdge(adj,4,6,8); 
     return 0;
 }
-
-
-
-
-/**
- * 
- * 
- * 
-*/
