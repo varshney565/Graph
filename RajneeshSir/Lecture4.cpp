@@ -112,6 +112,68 @@ void KahnsAlgo(int n,vector<vector<int>> &Graph){
     cout<<"\n";
 }
 //207 : Course Schedule
-
+bool canFinish(int n, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> Graph(n,vector<int>());
+    vector<int> Ind(n,0);
+    for(int i = 0 ; i < prerequisites.size() ; i++){
+        Graph[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        Ind[prerequisites[i][1]]++;
+    }
+    queue<int> JobsThatWillBeFinishedAtLast;
+    for(int i = 0 ; i < Ind.size() ; i++){
+        if(Ind[i] == 0){
+            JobsThatWillBeFinishedAtLast.push(i);
+        }
+    }
+    vector<int> ans;
+    while(!JobsThatWillBeFinishedAtLast.empty()){
+        int Front = JobsThatWillBeFinishedAtLast.front();
+        ans.push_back(Front);
+        JobsThatWillBeFinishedAtLast.pop();
+        for(int i = 0 ; i < Graph[Front].size() ; i++){
+            int v = Graph[Front][i];
+            Ind[v]--;
+            if(Ind[v] == 0){
+                JobsThatWillBeFinishedAtLast.push(v);
+            }
+        }
+    }
+    if(ans.size() < n){
+        return false;
+    }
+    return true;
+}
 
 //210
+vector<int> findOrder(int n, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> Graph(n,vector<int>());
+    vector<int> Ind(n,0);
+    for(int i = 0 ; i < prerequisites.size() ; i++){
+        Graph[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        Ind[prerequisites[i][1]]++;
+    }
+    queue<int> JobsThatWillBeFinishedAtLast;
+    for(int i = 0 ; i < Ind.size() ; i++){
+        if(Ind[i] == 0){
+            JobsThatWillBeFinishedAtLast.push(i);
+        }
+    }
+    vector<int> ans;
+    while(!JobsThatWillBeFinishedAtLast.empty()){
+        int Front = JobsThatWillBeFinishedAtLast.front();
+        ans.push_back(Front);
+        JobsThatWillBeFinishedAtLast.pop();
+        for(int i = 0 ; i < Graph[Front].size() ; i++){
+            int v = Graph[Front][i];
+            Ind[v]--;
+            if(Ind[v] == 0){
+                JobsThatWillBeFinishedAtLast.push(v);
+            }
+        }
+    }
+    if(ans.size() < n){
+        ans.clear();
+    }
+    reverse(ans.begin(),ans.end());
+    return ans;
+}
