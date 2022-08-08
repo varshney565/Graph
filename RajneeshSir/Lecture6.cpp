@@ -164,5 +164,12 @@ public:
 /**
  * initially total number of SCC = 0
  * if we put a 1 at position (x,y) and there is no one at the four sides of this node 
- * than it will increase the count of SCC by 1 else no change
+ * than it will increase the count of SCC by 1 else decrease the count by number of edges connected
+ * 
+ * won't work
+ * e.g : 
+ * 
+ * 1 1 1 1 1 1
+ * 1 0 0 0 0 1
+ * 1 1 ? 1 1 1
  **/
