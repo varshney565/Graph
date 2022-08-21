@@ -214,3 +214,30 @@ public:
         return -1;
     }
 };
+
+
+//Dijkrashta
+void Dj(vector<vector<pair<int,int>>> &graph,int source){
+    set<vector<int>> PendingNodes;
+    int n = graph.size();
+    PendingNodes.insert({0,source,-1,0});
+    vector<bool> visited(n,false);
+    while(!PendingNodes.empty()){
+        vector<int> Front = *PendingNodes.begin();
+        PendingNodes.erase(Front);
+        if(visited[Front[1]])
+            continue;
+        visited[Front[1]] = true;
+        for(int i = 0 ; i < graph[Front[1]].size() ; i++){
+            int w = graph[Front[1]][i].second;
+            int v = graph[Front[1]][i].first;
+            if(!visited[v]){
+                PendingNodes.insert({Front[0]+w,v,Front[1],w});
+            }
+        }
+    }
+    //Done
+}
+
+//Prisms algo --> used for MST
+//just sort the edges on the basis of Edge Weight and done
