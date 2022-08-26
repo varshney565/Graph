@@ -240,4 +240,4 @@ void Dj(vector<vector<pair<int,int>>> &graph,int source){
 }
 
 //Prisms algo --> used for MST
-//just sort the edges on the basis of Edge Weight and done
+//just sort the edges on the basis of Edge Weight and done 
