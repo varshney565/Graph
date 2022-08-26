@@ -69,7 +69,6 @@ public:
             if(visited[front.second])
                 continue;
             visited[front.second] = true;
-            cout<<x<<" "<<y<<" "<<dist<<"\n";
             if(front.second == dest)
                 return dist;
             for(int i = 0 ; i < 4 ; i++){
