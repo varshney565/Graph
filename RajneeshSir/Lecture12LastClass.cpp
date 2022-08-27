@@ -49,6 +49,56 @@ inline void print(int &n,int &m,vector<vector<int>> &v){for(int i=0 ;i<n;i++){fo
 
 */
 
+void dfs(int source,vector<vector<int>> &graph,vector<int>&ans,vector<bool> &visited){
+    visited[source] = true;
+    for(int i = 0 ; i < graph[source].size() ; i++){
+        int child = graph[source][i];
+        if(!visited[child]){
+            dfs(child,graph,ans,visited);
+        }
+    }
+    ans.push_back(source);
+}
+
+vector<vector<int>> reverse(vector<vector<int>> graph){
+    int n = graph.size();
+    vector<vector<int>> r_g(n);
+    for(int i = 0 ; i < n ; i++){
+        for(auto x : graph[i]){
+            r_g[x].push_back(i);
+        }
+    }
+    return r_g;
+}
+
+
+
+void KosaRajuAlgo(vector<vector<int>> graph){
+    int n = graph.size();
+    vector<bool> visited(n,false);
+    vector<int> ans;
+    for(int i = 0 ; i < n ; i++)
+        if(!visited[i])
+            dfs(i,graph,ans,visited);
+    graph = reverse(graph);
+    function<void(int)> go = [&](int src){
+        visited[src] = true;
+        cout<<src<<" ";
+        for(auto child : graph[src]){
+            if(!visited[child])
+                go(child);
+        }
+    };
+
+    visited.resize(n,false);
+    for(int i = ans.size()-1 ; i >= 0 ; i--){
+        if(!visited[ans[i]]){
+            go(ans[i]);
+            cout<<"\n";
+        }
+    }
+}
+
 
 void solve(){
    int n,m,k,x;
@@ -136,3 +186,4 @@ signed main()
     return 0;
 }
 
+//Mother Vertex Gfg Question
