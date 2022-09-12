@@ -1,0 +1,10 @@
+Lower Bound and Upper Bound on a vector ...
+
+1 : Vector is sorted in increasing order ...
+
+    Upper_bound : will give the element greater than the element that we are tring to find upper_bound of
+    lower_bound : will give the element greater than or equal to the element that we are tring to find upper_bound of
+
+2 : vector is sorted in decreasing order
+    upper_bound : will give the element lesser than the element that we are trying to find the upper_bound of
+    lower_bound : will give the element lesser than or equal to the element that we are trying to find the upper_bound of
