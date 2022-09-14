@@ -38,7 +38,7 @@ int solve(vector<vector<int>> &v,int n){
     int ans = 0;
     for(int i = 0 ; i < n ; i++){
         for(int j = i-1 ; j >= 0 ; j--){
-            if(v[i][0] > v[j][0] && v[i][1] > v[j][1]){
+            if(v[i][0] > v[j][0] && v[i][1] > v[j][1]){ //v[i][0] >= v[j][0] if starting or ending point can be same
                 LIS[i] = max(LIS[i],LIS[j]+1);
             }
         }
